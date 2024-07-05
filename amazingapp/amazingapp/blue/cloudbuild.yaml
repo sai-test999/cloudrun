@@ -18,4 +18,4 @@ steps:
 images:
   - us-central1-docker.pkg.dev/morning-batch-may/javaproject/amazingapp:$COMMIT_SHA
 options:
-  logging: NONE
+  logging: CLOUD_LOGGING_ONLY
