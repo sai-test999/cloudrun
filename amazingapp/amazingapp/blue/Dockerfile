@@ -1,20 +1,9 @@
-# Use an appropriate base image for your application.
-# This example uses a basic Alpine Linux image.
-FROM alpine:latest
-
-# Set the working directory
+FROM golang:1.13 as builder
 WORKDIR /app
+COPY . ./
+RUN CGO_ENABLED=0 GOOS=linux go build -o server
 
-# Copy your application files (if any)
-# For illustrative purposes, we'll use a simple script
-COPY hello.sh .
-
-# Expose port 8080
-EXPOSE 8080
-
-# Set the user and permissions for the script
-RUN adduser -D myuser
-USER myuser
-
-# What the container should run when it is started.
-CMD ["sh", "-c", "chmod +x hello.sh && ./hello.sh"]
+FROM alpine:3
+RUN apk add --no-cache ca-certificates
+COPY --from=builder /app/* /
+CMD ["/server"]
